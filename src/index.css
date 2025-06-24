@@ -1,0 +1,338 @@
+.card:hover {
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* index.css */
+
+
+/* Reset some basic things */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+/* Container tweaks */
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* Headings */
+
+h1,
+h2,
+h3 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+
+/* Forms */
+
+form label {
+    font-weight: 500;
+}
+
+form input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+
+/* Buttons */
+
+button,
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+
+/* Cards / Posts */
+
+.card {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Responsive tweaks */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    h1,
+    h2 {
+        font-size: 1.5rem;
+    }
+    .btn {
+        width: 100%;
+    }
+    input {
+        width: 100%;
+    }
+}
+
+
+/* Navbar / Header (if you have it) */
+
+.navbar {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+
+/* Reset & Base */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+
+/* Container */
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* Headings */
+
+h1,
+h2,
+h3 {
+    color: #343a40;
+    margin-bottom: 15px;
+}
+
+
+/* Navbar */
+
+.navbar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+
+/* Login / Signup Form */
+
+form label {
+    font-weight: 500;
+}
+
+form input {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+
+/* Profile Card */
+
+.profile-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.profile-card h3 {
+    margin: 10px 0 5px;
+}
+
+.profile-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* Post Card */
+
+.post-card {
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-card .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-card .post-header h5 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.post-card p {
+    margin: 10px 0;
+}
+
+.post-card .post-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+
+/* Comment Section */
+
+.comment-box {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.comment {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* Post Form */
+
+.create-post-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    min-height: 60px;
+    margin-bottom: 10px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .navbar a {
+        margin: 5px 0 0 0;
+    }
+    .btn {
+        width: 100%;
+    }
+    input,
+    textarea {
+        width: 100%;
+    }
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555;
+    font-size: 18px;
+}
+
+.icon-btn:hover {
+    color: #007bff;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
