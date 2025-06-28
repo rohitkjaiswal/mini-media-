@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -58,11 +65,12 @@ const UserProfile = () => {
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
       <div className="text-center mb-4">
         <img
-          src={userData.profilePic || "/default-profile.png"}
+          src={profilePic || "https://via.placeholder.com/100"}
           alt="Profile"
           className="rounded-circle mb-2"
           style={{ width: "100px", height: "100px", objectFit: "cover" }}
         />
+
         <h4>{userData.name}</h4>
         <p className="text-muted">@{username}</p>
       </div>
@@ -71,7 +79,9 @@ const UserProfile = () => {
       {userPosts.length > 0 ? (
         userPosts.map((post) => (
           <div key={post.id} className="card mb-3 shadow-sm">
-            {post.image && <img src={post.image} alt="Post" className="card-img-top" />}
+            {post.image && (
+              <img src={post.image} alt="Post" className="card-img-top" />
+            )}
             <div className="card-body">
               <p className="card-text">{post.caption}</p>
               <p className="card-text text-muted">

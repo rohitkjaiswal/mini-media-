@@ -1,9 +1,8 @@
-import { useState } from "react";
+ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { saveLoggedInUser } from "../utils/storage"; // ✅ Add this line
-
+import { saveLoggedInUser } from "../utils/storage"; 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +17,7 @@ function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
 
-      // ✅ Save user data to localStorage
+      //Save user data to localStorage
       const customUser = {
         email: firebaseUser.email,
         name: firebaseUser.displayName || firebaseUser.email.split("@")[0],
@@ -26,10 +25,10 @@ function Login() {
         password: password,
       };
 
-      saveLoggedInUser(customUser); // ✅ Store user info
+      saveLoggedInUser(customUser); // Store user info
 
       alert("✅ Logged in successfully!");
-      navigate("/profile"); // ✅ navigate to profile
+      navigate("/profile"); // navigate to profile
     } catch (error) {
       alert("❌ Invalid credentials!\n" + error.message);
     } finally {

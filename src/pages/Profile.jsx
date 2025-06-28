@@ -9,12 +9,12 @@ import {
   query,
   where,
   getDocs,
+  orderBy,
 } from "firebase/firestore";
 
 function Profile() {
   const navigate = useNavigate();
-  const user = auth.currentUser;
-
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [myPosts, setMyPosts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -23,51 +23,57 @@ function Profile() {
   const [newPassword, setNewPassword] = useState("");
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      if (!currentUser) {
+        navigate("/login");
+      } else {
+        setUser(currentUser);
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     if (!user) return;
 
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
           setUserData(data);
           setName(data.name);
           setProfilePic(data.profilePic);
           setFollowersCount(data.followers?.length || 0);
           setFollowingCount(data.following?.length || 0);
+
+          const q = query(
+            collection(db, "posts"),
+            where("author", "==", data.name),
+            orderBy("timestamp", "desc")
+          );
+
+          const querySnapshot = await getDocs(q);
+          const posts = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setMyPosts(posts);
         }
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error loading profile data:", error);
+        setLoading(false);
       }
     };
 
-    const fetchMyPosts = async () => {
-      try {
-        const q = query(
-          collection(db, "posts"),
-          where("author", "==", userData?.name || "")
-        );
-        const querySnapshot = await getDocs(q);
-        const posts = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMyPosts(posts);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-
-    fetchUserData();
-
-    // Delay post fetch until name is available
-    if (userData?.name) {
-      fetchMyPosts();
-    }
-  }, [user, userData?.name]);
+    fetchData();
+  }, [user]);
 
   const handleLogout = () => {
     auth.signOut();
@@ -83,8 +89,32 @@ function Profile() {
       });
 
       if (newPassword) {
-        await user.updatePassword(newPassword); // Must be recently logged in
+        try {
+          await user.updatePassword(newPassword);
+        } catch (err) {
+          if (err.code === "auth/requires-recent-login") {
+            alert("⚠️ Please re-login to change your password.");
+            auth.signOut();
+            navigate("/login");
+            return;
+          } else {
+            console.error("Password update error:", err);
+            alert("❌ Password update failed.");
+            return;
+          }
+        }
       }
+
+      // Update user's name in their posts
+      const postsQuery = query(
+        collection(db, "posts"),
+        where("author", "==", userData.name)
+      );
+      const postSnapshots = await getDocs(postsQuery);
+      const updatePromises = postSnapshots.docs.map((docSnap) =>
+        updateDoc(doc(db, "posts", docSnap.id), { author: name.trim() })
+      );
+      await Promise.all(updatePromises);
 
       alert("✅ Profile updated successfully!");
       setIsEditing(false);
@@ -95,7 +125,9 @@ function Profile() {
     }
   };
 
-  if (!user) return <p className="text-center mt-5">⚠️ Please login first to view profile.</p>;
+  if (loading) {
+    return <p className="text-center mt-5">⏳ Loading profile...</p>;
+  }
 
   return (
     <div className="container my-5">
@@ -108,6 +140,10 @@ function Profile() {
             alt="Profile"
             className="rounded-circle border"
             style={{ width: "100px", height: "100px", objectFit: "cover" }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://via.placeholder.com/100";
+            }}
           />
           <div>
             {isEditing ? (
@@ -137,10 +173,14 @@ function Profile() {
             ) : (
               <>
                 <h4>{userData?.name}</h4>
-                <p className="text-muted mb-0">{user.email}</p>
+                <p className="text-muted mb-0">{user?.email}</p>
                 <div className="d-flex gap-4 mt-2">
-                  <span><strong>{followersCount}</strong> Followers</span>
-                  <span><strong>{followingCount}</strong> Following</span>
+                  <span>
+                    <strong>{followersCount}</strong> Followers
+                  </span>
+                  <span>
+                    <strong>{followingCount}</strong> Following
+                  </span>
                 </div>
               </>
             )}
@@ -153,13 +193,19 @@ function Profile() {
               <button className="btn btn-success" onClick={handleUpdate}>
                 💾 Save
               </button>
-              <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setIsEditing(false)}
+              >
                 ❌ Cancel
               </button>
             </>
           ) : (
             <>
-              <button className="btn btn-warning" onClick={() => setIsEditing(true)}>
+              <button
+                className="btn btn-warning"
+                onClick={() => setIsEditing(true)}
+              >
                 ✏️ Edit Profile
               </button>
               <button className="btn btn-danger" onClick={handleLogout}>
@@ -184,7 +230,11 @@ function Profile() {
                     alt="Post"
                     className="card-img-top"
                     style={{ maxHeight: "250px", objectFit: "cover" }}
-                    onError={(e) => (e.target.style.display = "none")}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/250x200?text=No+Image";
+                    }}
                   />
                 )}
                 <div className="card-body">
