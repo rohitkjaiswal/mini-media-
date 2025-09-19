@@ -33,7 +33,7 @@ const UserCard = ({ user }) => {
     <div className="card p-3 mb-3 shadow-sm">
       <div className="d-flex justify-content-between align-items-center">
         <div>
-          <h5 className="mb-1">{user.name}</h5>
+          <h5 className="mb-1">{user.displayName}</h5>
           <p className="text-muted mb-0">@{user.username}</p>
         </div>
         <button

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
+import SearchBar from "./SearchBar";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -44,16 +45,13 @@ function Navbar() {
       </button>
 
       <div className="collapse navbar-collapse" id="navbarContent">
-        <form className="d-flex mx-auto my-2 my-lg-0 w-50">
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="🔍 Search posts or users..."
-            aria-label="Search"
-          />
-        </form>
 
         <ul className="navbar-nav ms-auto align-items-center gap-3">
+          <li className="nav-item">
+            <Link className="nav-link" to="/SearchUser">
+              🔍 Search User
+            </Link>
+          </li>
           <li className="nav-item">
             <button
               className={`btn btn-sm ${isDark ? "btn-light" : "btn-dark"}`}
@@ -86,9 +84,9 @@ function Navbar() {
             </>
           ) : (
             <>
-              <li className="nav-item">
-                <Link className="btn btn-outline-info" to="/create">
-                  ➕ Post
+              <li className="btn btn-outline-info nav-item" style={{direction:"none"}}>
+                <Link  to="/create">
+                 Create Post
                 </Link>
               </li>
 

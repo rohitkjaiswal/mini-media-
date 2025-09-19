@@ -40,7 +40,7 @@ const CreatePost = () => {
         caption,
         date: new Date().toLocaleString(),
         author: userData.name || "User",
-        profilePic: userData.profilePic || "",
+        profilePic: userData.photoURL || "",
         timestamp: serverTimestamp(),
         comments: [],
         authorId: user.uid,
@@ -64,6 +64,9 @@ const CreatePost = () => {
 
   return (
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
+
+         
+
       <h3 className="mb-4 text-primary d-flex align-items-center gap-2">
         <span>📝 Create New Post</span>
         {/* 👤 Profile photo is clickable */}

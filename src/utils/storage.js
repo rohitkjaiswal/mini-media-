@@ -37,4 +37,4 @@ export const savePost = (post) => {
     const existingPosts = JSON.parse(localStorage.getItem("posts")) || [];
     const updatedPosts = [post, ...existingPosts];
     localStorage.setItem("posts", JSON.stringify(updatedPosts));
-};
+};      

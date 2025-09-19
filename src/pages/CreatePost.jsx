@@ -27,9 +27,10 @@ const CreatePost = () => {
 
     try {
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      const userData = userDoc.exists() ? userDoc.data() : { name: "Anonymous", profilePic: "" };
+      const userData = userDoc.exists() ? userDoc.data() : { name:"Anonymous", profilePic: "" };
 
       const newPost = {
+        authorId: user.uid,
         image: image.trim() || null,
         caption,
         date: new Date().toLocaleString(),

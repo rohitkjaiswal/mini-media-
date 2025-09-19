@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { signInWithGoogle } from "../firebase";
 import { saveLoggedInUser } from "../utils/storage"; 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,24 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleGoogleSignIn = async () => {
+    try{
+      const user=await signInWithGoogle();
+      
+      const customUser={
+        email: user.email,
+        name: user.displayName || user.email.split("@")[0],
+        profilePic: user.photoURL || "",
+      };
+      saveLoggedInUser(customUser); // Store user info
+      alert("✅ Logged in successfully!");
+      navigate("/profile"); // navigate to profile  
+
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,12 +87,16 @@ function Login() {
                 className="btn btn-outline-secondary"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "🙈 Hide" : "👁️ Show"}
+                {showPassword ? "🙈" : "👁️"}
               </button>
             </div>
           </div>
-          <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+          
+          <button className="btn btn-outline-secondary w-100" type="submit" disabled={loading}>
             {loading ? "Logging in..." : "🚀 Login"}
+          </button>
+          <button className="btn btn-outline-primary w-100 mt-2" type="button" onClick={handleGoogleSignIn} >
+            Sign in with Google
           </button>
         </form>
         <div className="text-center mt-3">
