@@ -20,11 +20,12 @@ function App() {
         <Route path="/home" element={<PostForm />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} /> 
         <Route path="/profile/:uid/*" element={<UserProfile />} />
         <Route path="/SearchUser" element={<SearchBar />} />
 
         <Route path="/create" element={<CreatePost />} />
-        <Route path="/profile" element={<Profile />} /> 
+        
       </Routes>
     </>
   );
